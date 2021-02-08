@@ -3,6 +3,7 @@ package exifdata
 import (
 	"fmt"
 	"github.com/xiam/exif"
+	"os"
 	"strings"
 	"time"
 )
@@ -16,8 +17,9 @@ const (
 )
 
 type ExifData struct {
-	filePath string
-	tags     map[string]string
+	fileMTime time.Time
+	filePath  string
+	tags      map[string]string
 }
 
 func NewExifData(tags map[string]string, filepath string) ExifData {
@@ -27,23 +29,34 @@ func NewExifData(tags map[string]string, filepath string) ExifData {
 	}
 }
 
+//todo remove err from signature
 func (ed *ExifData) CreatedAt() (time.Time, error) {
 	if date, ok := ed.tags[tagDateAndTimeOriginal]; ok {
 		t, err := time.Parse(dateLayout, date)
 		if err != nil {
-			return time.Time{}, fmt.Errorf("file %s cannot parse date", ed.filePath)
+			return fileMTime(ed.filePath), nil
 		}
 		return t, nil
 	}
 
-	return time.Time{}, fmt.Errorf("no date tag %s", ed.filePath)
+	return fileMTime(ed.filePath), nil
+}
+
+func fileMTime(path string) time.Time {
+	info, err := os.Stat(path)
+	mTime := time.Now()
+	if err == nil {
+		mTime = info.ModTime()
+	}
+
+	return mTime
 }
 
 func (ed *ExifData) DeviceName() string {
-	devName := fmt.Sprintf("%s_%s", ed.extractManufact(), ed.extractModel())
-	if len(devName) < 1 {
+	if len(ed.extractManufact()) < 1 && len(ed.extractModel()) < 1 {
 		return defaultDeviceName
 	}
+	devName := fmt.Sprintf("%s_%s", ed.extractManufact(), ed.extractModel())
 	return strings.Replace(devName, " ", "_", -1)
 }
 

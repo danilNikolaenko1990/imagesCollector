@@ -42,7 +42,6 @@ func main() {
 		}
 
 		res, err := FullFileName(targetFolderToCopy, fRepr.FInfo, exif)
-
-		fmt.Printf("%v\n", res)
+		fmt.Printf("%v-%s\n", res, fRepr.Path)
 	}
 }

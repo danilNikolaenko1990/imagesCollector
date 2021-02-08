@@ -7,7 +7,7 @@ import (
 
 func TestExtractExif(t *testing.T) {
 	//path := "/home/danil/qumo_flash/DCIM/Camera/P_20150122_202959.jpg"
-	path := "/home/danil/DCIM2/DCIM/101NIKON/DSCN2685.JPG"
+	path := "/media/danil/TV/фотки/марк утренник/prazdnik_oseni/304.jpg"
 	//path := "/home/danil/DCIM/.thumbnails/(2073)(3)1422960337371.png"
 
 	data, err := Extract(path)
@@ -19,8 +19,8 @@ func TestExtractExif(t *testing.T) {
 	////fmt.Printf("%v\n", err)
 	//fmt.Printf("%v\n", createdAt)
 
-	deviceName :=  data.DeviceName()
+	deviceName , _:=  data.CreatedAt()
 	//fmt.Printf("%v\n", err)
-	fmt.Printf("%s\n", deviceName)
+	fmt.Printf("%v\n", deviceName)
 
 }
