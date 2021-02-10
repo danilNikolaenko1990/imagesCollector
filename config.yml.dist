@@ -1,0 +1,7 @@
+dirs_to_scan:
+  - "/home/danil/Dropbox"
+  - "/home/danil/Dropbox (Old)"
+  - "/media/danil/DRIVE_FOR_TV/pictures"
+
+extensions_to_handle:
+  - ".jpg"
