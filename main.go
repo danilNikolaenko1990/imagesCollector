@@ -3,31 +3,17 @@ package main
 import (
 	"fmt"
 	"github.com/labstack/gommon/log"
+	"imagesCollector/conf_extrac"
 	"imagesCollector/exifdata"
 	"imagesCollector/file"
 )
 
 const targetFolderToCopy = "/media/danil/TV/STRUCTURED_IMAGES"
+const confPath = "config.yml"
 
 func main() {
-	dirNames := []string{
-		"/home/danil/Dropbox",
-		"/home/danil/Dropbox (Old)",
-		"/home/danil/dropbox_old2",
-		"/home/danil/dell_latitude",
-		"/home/danil/DCIM",
-		"/home/danil/DCIM2",
-		"/home/danil/Documents",
-		"/home/danil/Pictures",
-		"/home/danil/qumo_flash",
-		"/home/danil/книги",
-		"/home/danil/книги марку",
-		"/media/danil/TV/фотки",
-		"/media/danil/TV/xiaomi_danil",
-		"/media/danil/TV/kvitancii",
-	}
-
-	fReprs, err := file.FindWithExtensions(dirNames, map[string]struct{}{".jpg": {}})
+	c := getConf()
+	fReprs, err := file.FindWithExtensions(c.DirsToScan, c.Extensions())
 
 	if err != nil {
 		panic(err.Error())
@@ -56,4 +42,12 @@ func main() {
 
 		fmt.Printf("file [%s] copied to [%s]\n", fRepr.Path, fullFileName)
 	}
+}
+
+func getConf() *conf_extrac.Data {
+	c, err := conf_extrac.Extract(confPath)
+	if err != nil {
+		panic(err)
+	}
+	return c
 }
