@@ -6,6 +6,7 @@ import (
 	"imagesCollector/conf_extrac"
 	"imagesCollector/exifdata"
 	"imagesCollector/file"
+	"imagesCollector/name"
 )
 
 const targetFolderToCopy = "/media/danil/TV/STRUCTURED_IMAGES"
@@ -27,13 +28,13 @@ func main() {
 			continue
 		}
 
-		pathToCopy := PathName(targetFolderToCopy, exif)
+		pathToCopy := name.PathName(targetFolderToCopy, exif)
 		err = file.MkDirIfNotExist(pathToCopy)
 		if err != nil {
 			log.Warnf("failed to create dir [%s]", err.Error())
 			continue
 		}
-		fullFileName := FullFileName(targetFolderToCopy, fRepr.FInfo, exif)
+		fullFileName := name.FullFileName(targetFolderToCopy, fRepr.FInfo, exif)
 		err = file.Copy(fRepr.Path, fullFileName)
 		if err != nil {
 			log.Warnf("failed to copy file [%s]", err.Error())
