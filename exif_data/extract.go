@@ -1,4 +1,4 @@
-package exifdata
+package exif_data
 
 import (
 	"fmt"

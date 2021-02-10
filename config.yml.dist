@@ -5,3 +5,5 @@ dirs_to_scan:
 
 extensions_to_handle:
   - ".jpg"
+
+target_folder_to_copy: "/media/user/TARGET_FOLDER_NAME"
