@@ -19,7 +19,7 @@ func TestExtractExif(t *testing.T) {
 	////fmt.Printf("%v\n", err)
 	//fmt.Printf("%v\n", createdAt)
 
-	deviceName , _:=  data.CreatedAt()
+	deviceName := data.CreatedAt()
 	//fmt.Printf("%v\n", err)
 	fmt.Printf("%v\n", deviceName)
 

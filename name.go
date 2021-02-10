@@ -12,33 +12,24 @@ import (
 
 func fileName(fInfo os.FileInfo, exif exifdata.ExifData) string {
 	randStr := randStr()
-	return fmt.Sprintf("IMG-%s-%s-%s", dateStr(fInfo, exif), exif.DeviceName(), randStr)
+	return fmt.Sprintf("IMG-%s-%s-%s", dateStr(exif), exif.DeviceName(), randStr)
 }
 
-func pathName(targetFolder string, exif exifdata.ExifData) (string, error) {
-	ctime, err := exif.CreatedAt()
-	if err != nil {
-		return "", err
-	}
+func PathName(targetFolder string, exif exifdata.ExifData) string {
+	ctime := exif.CreatedAt()
 
-	return filepath.Join(targetFolder, strconv.Itoa(ctime.Year()), ctime.Month().String()), nil
+	return filepath.Join(targetFolder, strconv.Itoa(ctime.Year()), ctime.Month().String())
 }
 
-func FullFileName(targetFolder string, fInfo os.FileInfo, exif exifdata.ExifData) (string, error) {
-	pathName, err := pathName(targetFolder, exif)
-	if err != nil {
-		return "", err
-	}
+func FullFileName(targetFolder string, fInfo os.FileInfo, exif exifdata.ExifData) string {
+	pathName := PathName(targetFolder, exif)
 	fName := fileName(fInfo, exif)
 
-	return filepath.Join(pathName, fName), err
+	return filepath.Join(pathName, fName)
 }
 
-func dateStr(fInfo os.FileInfo, exif exifdata.ExifData) string {
-	createdAt, err := exif.CreatedAt()
-	if err != nil {
-		createdAt = fInfo.ModTime()
-	}
+func dateStr(exif exifdata.ExifData) string {
+	createdAt := exif.CreatedAt()
 
 	return createdAt.Format("01_02_2006_15_04_05")
 }

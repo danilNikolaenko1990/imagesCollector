@@ -21,10 +21,7 @@ func TestPathName(t *testing.T) {
 	targetDir := "/media/danil/TV/STRUCTURED_IMAGES/"
 	data, _ := exifdata.Extract(path)
 
-	res, err := pathName(targetDir, data)
-	if err != nil {
-		panic(err)
-	}
+	res := PathName(targetDir, data)
 	fmt.Println(res)
 }
 
@@ -34,13 +31,7 @@ func TestFullFileName(t *testing.T) {
 	exifData, _ := exifdata.Extract(path)
 	fileinfo, _ := os.Stat(path)
 
-	res, err := FullFileName(targetDir, fileinfo, exifData)
-	if err != nil {
-		panic(err)
-	}
+	res := FullFileName(targetDir, fileinfo, exifData)
 
 	print(res)
 }
-
-
-

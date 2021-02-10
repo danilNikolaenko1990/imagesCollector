@@ -41,7 +41,19 @@ func main() {
 			continue
 		}
 
-		res, err := FullFileName(targetFolderToCopy, fRepr.FInfo, exif)
-		fmt.Printf("%v-%s\n", res, fRepr.Path)
+		pathToCopy := PathName(targetFolderToCopy, exif)
+		err = file.MkDirIfNotExist(pathToCopy)
+		if err != nil {
+			log.Warnf("failed to create dir [%s]", err.Error())
+			continue
+		}
+		fullFileName := FullFileName(targetFolderToCopy, fRepr.FInfo, exif)
+		err = file.Copy(fRepr.Path, fullFileName)
+		if err != nil {
+			log.Warnf("failed to copy file [%s]", err.Error())
+			continue
+		}
+
+		fmt.Printf("file [%s] copied to [%s]\n", fRepr.Path, fullFileName)
 	}
 }

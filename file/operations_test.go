@@ -10,7 +10,7 @@ func TestWalkFile(t *testing.T) {
 	dirNames := []string{"/home/danil/qumo_flash", "/home/danil/DCIM/"}
 
 	exts := map[string]struct{}{".jpg": {}}
-	result, _:= FindWithExtensions(dirNames, exts)
+	result, _ := FindWithExtensions(dirNames, exts)
 	fmt.Printf("%v\n", result)
 
 }
@@ -35,9 +35,5 @@ func TestMkDirIfNotExist(t *testing.T) {
 
 func TestIsDirExists(t *testing.T) {
 	dirname := "/home/danil"
-	fmt.Print(isDirExists(dirname))
+	fmt.Print(IsDirExists(dirname))
 }
-
-
-
-

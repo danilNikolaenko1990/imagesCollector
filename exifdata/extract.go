@@ -29,17 +29,16 @@ func NewExifData(tags map[string]string, filepath string) ExifData {
 	}
 }
 
-//todo remove err from signature
-func (ed *ExifData) CreatedAt() (time.Time, error) {
+func (ed *ExifData) CreatedAt() time.Time {
 	if date, ok := ed.tags[tagDateAndTimeOriginal]; ok {
 		t, err := time.Parse(dateLayout, date)
 		if err != nil {
-			return fileMTime(ed.filePath), nil
+			return fileMTime(ed.filePath)
 		}
-		return t, nil
+		return t
 	}
 
-	return fileMTime(ed.filePath), nil
+	return fileMTime(ed.filePath)
 }
 
 func fileMTime(path string) time.Time {
