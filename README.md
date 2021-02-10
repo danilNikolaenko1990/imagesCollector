@@ -7,12 +7,12 @@ sudo apt-get install -y libexif-dev
 
 
 todo:
-- yaml config
+- yaml config +
 - goroutines for copying
-- remove dependence on libexif
-- uniq files
 - command (plain folder result, by year, by year and months)
+- uniq files
 - console progress bar
+- remove dependence on libexif
 - tests
 - GUI
 - windows version
