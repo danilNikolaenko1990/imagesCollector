@@ -12,12 +12,6 @@ type FileRepr struct {
 	FInfo os.FileInfo
 }
 
-func fileExists(path string) bool {
-	_, err := os.Stat(path)
-
-	return err == nil
-}
-
 func Copy(src, dst string) error {
 	in, err := os.Open(src)
 	if err != nil {
@@ -38,37 +32,32 @@ func Copy(src, dst string) error {
 	return out.Close()
 }
 
-func remove(path string) error {
-	e := os.Remove(path)
-	if e != nil {
-		return e
-	}
-	return nil
-}
+func FindWithExtensions(paths []string, exts map[string]struct{}) (chan FileRepr, chan error) {
+	files := make(chan FileRepr)
+	errors := make(chan error)
+	go func() {
+		for _, path := range paths {
+			if IsDirExists(path) {
+				err := filepath.Walk(path,
+					func(path string, info os.FileInfo, err error) error {
+						if err != nil {
+							errors <- err
+						}
+						if !info.IsDir() && isAllowedExt(info.Name(), exts) {
+							files <- FileRepr{
+								Path:  path,
+								FInfo: info,
+							}
+						}
 
-func FindWithExtensions(paths []string, exts map[string]struct{}) ([]FileRepr, error) {
-	var files []FileRepr
-	for _, path := range paths {
-		if IsDirExists(path) {
-			err := filepath.Walk(path,
-				func(path string, info os.FileInfo, err error) error {
-					if err != nil {
-						return err
-					}
-					if !info.IsDir() && isAllowedExt(info.Name(), exts) {
-						files = append(files, FileRepr{
-							Path:  path,
-							FInfo: info,
-						})
-					}
-
-					return nil
-				})
-			if err != nil {
-				return nil, err
+						return nil
+					})
+				if err != nil {
+					errors <- err
+				}
 			}
 		}
-	}
+	}()
 
 	return files, nil
 }

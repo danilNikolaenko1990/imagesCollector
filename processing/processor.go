@@ -10,33 +10,35 @@ import (
 )
 
 func Process(conf *conf_parser.Config) {
-	fReprs, err := file.FindWithExtensions(conf.DirsToScan, conf.Extensions())
+	fReprs, errors := file.FindWithExtensions(conf.DirsToScan, conf.Extensions())
+
+	workers := 4
+
+	for fRepr := range fReprs {
+
+	}
+}
+
+func performCopy(fRepr file.FileRepr, conf conf_parser.Config) {
+	exif, err := exif_data.Extract(fRepr.Path)
 
 	if err != nil {
-		panic(err.Error())
+		log.Warn(err)
+		return
 	}
 
-	for _, fRepr := range fReprs {
-		exif, err := exif_data.Extract(fRepr.Path)
-
-		if err != nil {
-			log.Warn(err)
-			continue
-		}
-
-		pathToCopy := name.PathName(conf.TargetFolderToCopy, exif)
-		err = file.MkDirIfNotExist(pathToCopy)
-		if err != nil {
-			log.Warnf("failed to create dir [%s]", err.Error())
-			continue
-		}
-		fullFileName := name.FullFileName(conf.TargetFolderToCopy, fRepr.FInfo, exif)
-		err = file.Copy(fRepr.Path, fullFileName)
-		if err != nil {
-			log.Warnf("failed to copy file [%s]", err.Error())
-			continue
-		}
-
-		fmt.Printf("file [%s] copied to [%s]\n", fRepr.Path, fullFileName)
+	pathToCopy := name.PathName(conf.TargetFolderToCopy, exif)
+	err = file.MkDirIfNotExist(pathToCopy)
+	if err != nil {
+		log.Warnf("failed to create dir [%s]", err.Error())
+		return
 	}
+	fullFileName := name.FullFileName(conf.TargetFolderToCopy, fRepr.FInfo, exif)
+	err = file.Copy(fRepr.Path, fullFileName)
+	if err != nil {
+		log.Warnf("failed to copy file [%s]", err.Error())
+		return
+	}
+
+	fmt.Printf("file [%s] copied to [%s]\n", fRepr.Path, fullFileName)
 }
