@@ -17,7 +17,9 @@ func Process(needCopy bool) {
 	conf := getConf()
 	if dialog.IsUserAgreedWithSettings(conf) {
 		files := file.Find(conf.DirsToScan, conf.Extensions())
-		for _, fileItem := range files {
+		total := len(files)
+		for id, fileItem := range files {
+			fmt.Printf("current: %d, total: %d ", id, total)
 			if fileItem.Error == nil {
 				performCopy(fileItem, conf, needCopy)
 			} else {
