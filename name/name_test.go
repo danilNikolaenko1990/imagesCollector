@@ -7,6 +7,7 @@ import (
 	"testing"
 )
 
+//todo make tests based on real files
 func TestFileName(t *testing.T) {
 	path := "/home/danil/DCIM/Camera/P_20141207_181719.jpg"
 	data, _ := exif_data.Extract(path)

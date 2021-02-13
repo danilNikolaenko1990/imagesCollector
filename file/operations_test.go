@@ -6,15 +6,7 @@ import (
 	"testing"
 )
 
-func TestWalkFile(t *testing.T) {
-	dirNames := []string{"/home/danil/qumo_flash", "/home/danil/DCIM/"}
-
-	exts := map[string]struct{}{".jpg": {}}
-	result, _ := Find(dirNames, exts)
-	fmt.Printf("%v\n", result)
-
-}
-
+//todo make tests based on real files
 func TestIsAllowedExt(t *testing.T) {
 	exts := map[string]struct{}{".jpg": {}}
 	path := "/home/danil/DCIM/.thumbnails/(2073)(3)1422960337371.jpg"
