@@ -19,7 +19,7 @@ todo:
 - yaml config +
 - command (plain folder result, by year, by year and months) +
 - console progress bar
-- remove dependence on libexif
+- remove libexif dependency
 - tests
 - GUI
 - windows version
