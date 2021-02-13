@@ -10,7 +10,7 @@ func TestWalkFile(t *testing.T) {
 	dirNames := []string{"/home/danil/qumo_flash", "/home/danil/DCIM/"}
 
 	exts := map[string]struct{}{".jpg": {}}
-	result, _ := FindWithExtensions(dirNames, exts)
+	result, _ := Find(dirNames, exts)
 	fmt.Printf("%v\n", result)
 
 }

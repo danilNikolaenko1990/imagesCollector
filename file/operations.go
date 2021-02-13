@@ -10,6 +10,7 @@ import (
 type FileRepr struct {
 	Path  string
 	FInfo os.FileInfo
+	Error error
 }
 
 func Copy(src, dst string) error {
@@ -32,16 +33,17 @@ func Copy(src, dst string) error {
 	return out.Close()
 }
 
-func FindWithExtensions(paths []string, exts map[string]struct{}) (chan FileRepr, chan error) {
+func Find(paths []string, exts map[string]struct{}) <-chan FileRepr {
 	files := make(chan FileRepr)
-	errors := make(chan error)
 	go func() {
 		for _, path := range paths {
 			if IsDirExists(path) {
 				err := filepath.Walk(path,
 					func(path string, info os.FileInfo, err error) error {
 						if err != nil {
-							errors <- err
+							files <- FileRepr{
+								Error: err,
+							}
 						}
 						if !info.IsDir() && isAllowedExt(info.Name(), exts) {
 							files <- FileRepr{
@@ -53,13 +55,16 @@ func FindWithExtensions(paths []string, exts map[string]struct{}) (chan FileRepr
 						return nil
 					})
 				if err != nil {
-					errors <- err
+					files <- FileRepr{
+						Error: err,
+					}
 				}
 			}
 		}
+		close(files)
 	}()
 
-	return files, nil
+	return files
 }
 
 func isAllowedExt(path string, exts map[string]struct{}) bool {
