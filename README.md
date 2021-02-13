@@ -1,3 +1,6 @@
+This program walk through all the folders you configured and picks images. Then it copies them into target folder 
+organized by folders named like 2021/April/IMG-04_10_2018_12_59_15-Apple_Iphone-0a1016.jpg 
+
 How to use:
 # OSX
 brew install libexif
