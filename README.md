@@ -8,11 +8,10 @@ sudo apt-get install -y libexif-dev
 
 todo:
 - yaml config +
-- goroutines for copying
+- goroutines for copying +
 - command (plain folder result, by year, by year and months)
-- answer a question about folders and configs
-- uniq files
 - console progress bar
+- answer a question about folders and configs
 - remove dependence on libexif
 - tests
 - GUI

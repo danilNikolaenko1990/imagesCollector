@@ -33,36 +33,33 @@ func Copy(src, dst string) error {
 	return out.Close()
 }
 
-func Find(paths []string, exts map[string]struct{}) <-chan FileRepr {
-	files := make(chan FileRepr)
-	go func() {
-		for _, path := range paths {
-			if IsDirExists(path) {
-				err := filepath.Walk(path,
-					func(path string, info os.FileInfo, err error) error {
-						if err != nil {
-							files <- FileRepr{
-								Error: err,
-							}
-						}
-						if !info.IsDir() && isAllowedExt(info.Name(), exts) {
-							files <- FileRepr{
-								Path:  path,
-								FInfo: info,
-							}
-						}
-
-						return nil
-					})
-				if err != nil {
-					files <- FileRepr{
-						Error: err,
+func Find(paths []string, exts map[string]struct{}) []FileRepr {
+	var files []FileRepr
+	for _, path := range paths {
+		if IsDirExists(path) {
+			err := filepath.Walk(path,
+				func(path string, info os.FileInfo, err error) error {
+					if err != nil {
+						files = append(files, FileRepr{
+							Error: err,
+						})
 					}
-				}
+					if !info.IsDir() && isAllowedExt(info.Name(), exts) {
+						files = append(files, FileRepr{
+							Path:  path,
+							FInfo: info,
+						})
+					}
+
+					return nil
+				})
+			if err != nil {
+				files = append(files, FileRepr{
+					Error: err,
+				})
 			}
 		}
-		close(files)
-	}()
+	}
 
 	return files
 }

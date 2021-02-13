@@ -7,34 +7,17 @@ import (
 	"imagesCollector/exif_data"
 	"imagesCollector/file"
 	"imagesCollector/name"
-	"runtime"
-	"sync"
 )
 
 func Process(conf *conf_parser.Config) {
 	files := file.Find(conf.DirsToScan, conf.Extensions())
-	workers := runtime.NumCPU()
-	processAsyncAndWait(workers, func() {
-		for fileItem := range files {
-			if fileItem.Error == nil {
-				performCopy(fileItem, conf)
-			} else {
-				fmt.Printf("fileItem %s, [%s]", fileItem.Path, fileItem.Error.Error())
-			}
+	for _, fileItem := range files {
+		if fileItem.Error == nil {
+			performCopy(fileItem, conf)
+		} else {
+			fmt.Printf("fileItem %s, [%s]", fileItem.Path, fileItem.Error.Error())
 		}
-	})
-}
-
-func processAsyncAndWait(workers int, performer func()) {
-	wg := &sync.WaitGroup{}
-	for i := 0; i < workers; i++ {
-		wg.Add(1)
-		go func() {
-			defer wg.Done()
-			performer()
-		}()
 	}
-	wg.Wait()
 }
 
 func performCopy(fRepr file.FileRepr, conf *conf_parser.Config) {
