@@ -4,21 +4,25 @@ import (
 	"fmt"
 	"github.com/labstack/gommon/log"
 	"imagesCollector/conf_parser"
+	"imagesCollector/dialog"
 	"imagesCollector/exif_data"
 	"imagesCollector/file"
 	"imagesCollector/name"
+	"os"
 )
 
 const confPath = "config.yml"
 
 func Process(needCopy bool) {
 	conf := getConf()
-	files := file.Find(conf.DirsToScan, conf.Extensions())
-	for _, fileItem := range files {
-		if fileItem.Error == nil {
-			performCopy(fileItem, conf, needCopy)
-		} else {
-			fmt.Printf("fileItem %s, [%s]", fileItem.Path, fileItem.Error.Error())
+	if dialog.IsUserAgreedWithSettings(conf) {
+		files := file.Find(conf.DirsToScan, conf.Extensions())
+		for _, fileItem := range files {
+			if fileItem.Error == nil {
+				performCopy(fileItem, conf, needCopy)
+			} else {
+				fmt.Printf("fileItem %s, [%s]", fileItem.Path, fileItem.Error.Error())
+			}
 		}
 	}
 }
@@ -26,7 +30,8 @@ func Process(needCopy bool) {
 func getConf() *conf_parser.Config {
 	c, err := conf_parser.Extract(confPath)
 	if err != nil {
-		panic(err)
+		fmt.Println("copy config.yml.dist and place it beside with config.yml name and write correct parameters then")
+		os.Exit(1)
 	}
 	return c
 }
