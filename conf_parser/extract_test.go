@@ -5,7 +5,6 @@ import (
 	"testing"
 )
 
-//todo make tests based on real files
 func TestExtract(t *testing.T) {
 	path := "_files/config.yml"
 	result, err := Extract(path)
